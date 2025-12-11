@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_app_flutter/global_variable.dart';
 import 'package:shopping_app_flutter/product_card.dart';
+import 'package:shopping_app_flutter/product_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<String> filters = const ['All', 'Addidas', 'Nike', 'Bata'];
   late String selectedFilter;
+  int currentPage = 0;
 
   @override
   void initState() {
@@ -102,19 +104,44 @@ class _HomePageState extends State<HomePage> {
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
-                  return ProductCard(
-                    title: product['title'] as String,
-                    price: product['price'] as double,
-                    image: product['imageUrl'] as String,
-                    backgroundColor: index.isEven
-                        ? const Color.fromRGBO(216, 240, 253, 1)
-                        : const Color.fromRGBO(245, 247, 249, 1),
+                  return GestureDetector(
+                    //Navigate from one to another page
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ProductDetailPage(product: product);
+                          },
+                        ),
+                      );
+                    },
+                    child: ProductCard(
+                      title: product['title'] as String,
+                      price: product['price'] as double,
+                      image: product['imageUrl'] as String,
+                      backgroundColor: index.isEven
+                          ? const Color.fromRGBO(216, 240, 253, 1)
+                          : const Color.fromRGBO(245, 247, 249, 1),
+                    ),
                   );
                 },
               ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (value) {
+          setState(() {
+            currentPage = value;
+          });
+        },
+        currentIndex: currentPage,
+        //code for drawing bottom nav bar
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: ''),
+        ],
       ),
     );
   }
