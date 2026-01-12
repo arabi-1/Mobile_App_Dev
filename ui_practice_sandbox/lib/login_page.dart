@@ -51,23 +51,23 @@ class LoginScreen extends StatelessWidget {
             OutlinedButton(
               onPressed: () {},
               style: OutlinedButton.styleFrom(minimumSize: Size(350, 50)),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Icon(Icons.mail),
-                  SizedBox(width: 10),
                   Text(
-                    'Login with Email',
-                    textAlign: TextAlign.center,
+                    'Login in with Email',
                     style: TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
+                      color: Colors.white,
                     ),
                   ),
-                  Opacity(
-                    opacity: 0.0, // Make it invisible
-                    child: Icon(Icons.mail), // Same icon as left
+                  Align(
+                    alignment: AlignmentGeometry.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.only(right: 1),
+                      child: Icon(Icons.mail, color: Colors.white),
+                    ),
                   ),
                 ],
               ),
