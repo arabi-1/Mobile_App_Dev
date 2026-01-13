@@ -11,7 +11,16 @@ class LoginScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 80),
+            SizedBox(height: 30),
+            Center(
+              child: CircleAvatar(
+                backgroundColor: Colors.grey,
+                minRadius: 40,
+                maxRadius: 70,
+                child: Icon(Icons.person_2_sharp, color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 30),
             Text(
               'Salam, Please Login!',
               style: TextStyle(
