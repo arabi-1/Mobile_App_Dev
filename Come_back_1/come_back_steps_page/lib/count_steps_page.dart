@@ -1,12 +1,18 @@
 import 'package:come_back_steps_page/steps_provider.dart';
+import 'package:come_back_steps_page/vertical_bar_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // import 'package:nb_utils/nb_utils.dart';
 
-class CountStepsPage extends StatelessWidget {
+class CountStepsPage extends StatefulWidget {
   const CountStepsPage({super.key});
 
+  @override
+  State<CountStepsPage> createState() => _CountStepsPageState();
+}
+
+class _CountStepsPageState extends State<CountStepsPage> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<StepsProvider>();
@@ -130,7 +136,7 @@ class CountStepsPage extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      '6000',
+                      provider.stepGoal.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -146,7 +152,7 @@ class CountStepsPage extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      '1.2',
+                      provider.distanceKm.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -165,7 +171,7 @@ class CountStepsPage extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      '340',
+                      provider.calories.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -202,7 +208,7 @@ class CountStepsPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 8, top: 8),
                             child: Text(
-                              "246",
+                              provider.waterMl.toString(),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -213,7 +219,7 @@ class CountStepsPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Text(
-                              '1893 ml',
+                              "${provider.waterMl * 250} ml",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -225,19 +231,31 @@ class CountStepsPage extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Row(
                               children: [
-                                Text(
-                                  "Drink water",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                Expanded(
+                                  child: Text(
+                                    "Drink water",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 2),
-                                Icon(
-                                  Icons.add_outlined,
-                                  color: Colors.white,
-                                  size: 20,
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  onPressed: () {
+                                    Provider.of<StepsProvider>(
+                                      context,
+                                      listen: false,
+                                    ).addWater();
+                                  },
+                                  icon: Icon(
+                                    Icons.add_outlined,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ],
                             ),
@@ -261,7 +279,7 @@ class CountStepsPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 8, top: 8),
                             child: Text(
-                              "246",
+                              provider.weight_count.toString(),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -272,7 +290,7 @@ class CountStepsPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Text(
-                              '1893 ml',
+                              "${provider.weight_count} kg",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -284,19 +302,31 @@ class CountStepsPage extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Row(
                               children: [
-                                Text(
-                                  "Drink water",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                Expanded(
+                                  child: Text(
+                                    "Drink water",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 5),
-                                Icon(
-                                  Icons.add_outlined,
-                                  color: Colors.white,
-                                  size: 20,
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                  onPressed: () {
+                                    Provider.of<StepsProvider>(
+                                      context,
+                                      listen: false,
+                                    ).countWeight();
+                                  },
+                                  icon: Icon(
+                                    Icons.add_outlined,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ],
                             ),
@@ -308,41 +338,29 @@ class CountStepsPage extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              children: [
-                SizedBox(height: 10),
-                Column(
-                  children: [
-                    Container(
-                      height: 120,
-                      width: 14,
-                      child: Stack(
-                        alignment: AlignmentGeometry.bottomCenter,
-                        children: [
-                          Container(
-                            height: 120,
-                            width: 14,
-                            color: Colors.white24,
-                          ),
-                          FractionallySizedBox(
-                            heightFactor: 0.5,
-                            child: Container(color: Colors.indigo),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Text(
-                  "January",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
+            SizedBox(height: 15),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(height: 10),
+                  VerticalBarChart(month: 'Feb', height: 1),
+                  SizedBox(width: 2, height: 5),
+                  VerticalBarChart(month: 'Mar', height: 0.4),
+                  SizedBox(width: 2, height: 5),
+                  VerticalBarChart(month: 'Apr', height: 0.3),
+                  SizedBox(width: 2, height: 5),
+                  VerticalBarChart(month: 'May', height: 0.2),
+                  SizedBox(width: 2, height: 5),
+                  VerticalBarChart(month: 'Jun', height: 0.2),
+                  SizedBox(width: 2, height: 5),
+                  VerticalBarChart(month: 'Jul', height: 0.8),
+                  SizedBox(width: 2, height: 5),
+                  VerticalBarChart(month: 'Aug', height: 0.7),
+                ],
+              ),
             ),
           ],
         ),
