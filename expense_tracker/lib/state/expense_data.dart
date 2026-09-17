@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../models/transaction_item.dart';
 
-/// Responsibility: own the expense collection and publish state changes.
-/// Public contract: [expenses], [getTotalAmount], [addNewExpense], and
-/// [deleteExpense].
-/// Boundary: does not build widgets or expose a mutable collection to callers.
+/// Stores expenses, calculates totals, and notifies listeners after mutations.
 class ExpenseData extends ChangeNotifier {
+  static const List<Color> _expenseColors = [
+    Color(0xFF64B5F6),
+    Color(0xFF81C784),
+    Color(0xFFFF8A65),
+    Colors.purpleAccent,
+    Colors.amber,
+  ];
+
   final List<TransactionItem> _expenses = [
     TransactionItem(
       name: "Pet Care",
@@ -28,27 +33,19 @@ class ExpenseData extends ChangeNotifier {
   List<TransactionItem> get expenses => List.unmodifiable(_expenses);
 
   double getTotalAmount() {
-    double total = 0;
-    for (var item in _expenses) {
-      total += double.tryParse(item.amount) ?? 0;
+    double totalAmount = 0;
+    for (final expense in _expenses) {
+      totalAmount += double.tryParse(expense.amount) ?? 0;
     }
-    return total;
+    return totalAmount;
   }
 
   void addNewExpense(String newName, String newAmount) {
-    List<Color> colors = [
-      const Color(0xFF64B5F6),
-      const Color(0xFF81C784),
-      const Color(0xFFFF8A65),
-      Colors.purpleAccent,
-      Colors.amber,
-    ];
-
     _expenses.add(
       TransactionItem(
         name: newName,
         amount: newAmount,
-        color: colors[_expenses.length % colors.length],
+        color: _expenseColors[_expenses.length % _expenseColors.length],
       ),
     );
     notifyListeners();

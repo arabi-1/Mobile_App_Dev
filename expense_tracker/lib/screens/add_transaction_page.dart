@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
-/// Responsibility: collect and validate the fields for one new expense.
-/// Public contract: invokes [onSave] with the entered name and amount.
-/// Boundary: does not own expense state, choose colors, or persist data.
+/// Collects a name and amount, then submits them through [onSave].
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({required this.onSave, super.key});
 
   final void Function(String name, String amount) onSave;
+
+  static const double _pagePadding = 25;
+  static const double _fieldSpacing = 10;
+  static const double _sectionSpacing = 25;
+  static const double _buttonHeight = 55;
+  static const double _fieldRadius = 12;
+  static const double _buttonRadius = 15;
 
   @override
   State<AddTransactionPage> createState() => _AddTransactionPageState();
@@ -15,6 +20,13 @@ class AddTransactionPage extends StatefulWidget {
 class _AddTransactionPageState extends State<AddTransactionPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    amountController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +42,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(AddTransactionPage._pagePadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -38,43 +50,27 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               "NAME",
               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
             ),
-            const SizedBox(height: 10),
-            TextField(
+            const SizedBox(height: AddTransactionPage._fieldSpacing),
+            _buildTextField(
               controller: nameController,
-              decoration: InputDecoration(
-                hintText: "e.g. Coffee",
-                filled: true,
-                fillColor: Colors.grey[100],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
+              hintText: "e.g. Coffee",
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: AddTransactionPage._sectionSpacing),
             const Text(
               "AMOUNT",
               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
             ),
-            const SizedBox(height: 10),
-            TextField(
+            const SizedBox(height: AddTransactionPage._fieldSpacing),
+            _buildTextField(
               controller: amountController,
+              hintText: "e.g. 500",
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: "e.g. 500",
-                prefixText: "Rs ",
-                filled: true,
-                fillColor: Colors.grey[100],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
+              prefixText: "Rs ",
             ),
             const Spacer(),
             SizedBox(
               width: double.infinity,
-              height: 55,
+              height: AddTransactionPage._buttonHeight,
               child: ElevatedButton(
                 onPressed: () {
                   if (nameController.text.isNotEmpty &&
@@ -87,7 +83,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(
+                      AddTransactionPage._buttonRadius,
+                    ),
                   ),
                 ),
                 child: const Text(
@@ -102,6 +100,28 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             ),
             const SizedBox(height: 20),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    TextInputType? keyboardType,
+    String? prefixText,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        hintText: hintText,
+        prefixText: prefixText,
+        filled: true,
+        fillColor: Colors.grey[100],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AddTransactionPage._fieldRadius),
+          borderSide: BorderSide.none,
         ),
       ),
     );

@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/transaction_item.dart';
 import '../utils/currency_formatter.dart';
 
-/// Responsibility: render the expense distribution pie chart and total.
-/// Public contract: accepts only the [expenses] to plot and [totalAmount].
-/// Boundary: does not read or mutate application state or handle navigation.
+/// Displays the expense distribution and the current total amount.
 class ExpenseChart extends StatelessWidget {
   const ExpenseChart({
     required this.expenses,
@@ -17,49 +15,59 @@ class ExpenseChart extends StatelessWidget {
   final List<TransactionItem> expenses;
   final double totalAmount;
 
+  static const double _chartHeight = 200;
+  static const double _centerSpaceRadius = 70;
+  static const double _sectionRadius = 35;
+  static const double _sectionSpacing = 4;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: _chartHeight,
       child: Stack(
         alignment: Alignment.center,
-        children: [
-          PieChart(
-            PieChartData(
-              sectionsSpace: 4,
-              centerSpaceRadius: 70,
-              startDegreeOffset: 270,
-              sections: expenses
-                  .map(
-                    (item) => PieChartSectionData(
-                      color: item.color,
-                      value: double.tryParse(item.amount) ?? 0,
-                      showTitle: false,
-                      radius: 35,
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Total Spent",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-              Text(
-                formatRupees(totalAmount),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ],
+        children: [_buildPieChart(), _buildTotalLabel()],
       ),
+    );
+  }
+
+  Widget _buildPieChart() {
+    return PieChart(
+      PieChartData(
+        sectionsSpace: _sectionSpacing,
+        centerSpaceRadius: _centerSpaceRadius,
+        startDegreeOffset: 270,
+        sections: expenses
+            .map(
+              (expense) => PieChartSectionData(
+                color: expense.color,
+                value: double.tryParse(expense.amount) ?? 0,
+                showTitle: false,
+                radius: _sectionRadius,
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildTotalLabel() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Total Spent",
+          style: TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+        Text(
+          formatRupees(totalAmount),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            color: Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 }
