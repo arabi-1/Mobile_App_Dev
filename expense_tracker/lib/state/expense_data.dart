@@ -1,23 +1,9 @@
 import 'package:flutter/material.dart';
 
-// 1. Define what a "Transaction" is
-class TransactionItem {
-  final String name;
-  final String amount;
-  final Color color;
+import '../models/transaction_item.dart';
 
-  TransactionItem({
-    required this.name,
-    required this.amount,
-    required this.color,
-  });
-}
-
-// 2. Create the Provider Class
 class ExpenseData extends ChangeNotifier {
-  // The List (Source of Truth)
   List<TransactionItem> overallExpenseList = [
-    // Default data
     TransactionItem(
       name: "Pet Care",
       amount: "178",
@@ -35,7 +21,6 @@ class ExpenseData extends ChangeNotifier {
     ),
   ];
 
-  // Helper to get total amount
   double getTotalAmount() {
     double total = 0;
     for (var item in overallExpenseList) {
@@ -44,7 +29,6 @@ class ExpenseData extends ChangeNotifier {
     return total;
   }
 
-  // ADD NEW ITEM
   void addNewExpense(String newName, String newAmount) {
     List<Color> colors = [
       const Color(0xFF64B5F6),
@@ -64,7 +48,6 @@ class ExpenseData extends ChangeNotifier {
     notifyListeners();
   }
 
-  // DELETE ITEM (This is the missing part!)
   void deleteExpense(TransactionItem item) {
     overallExpenseList.remove(item);
     notifyListeners();
