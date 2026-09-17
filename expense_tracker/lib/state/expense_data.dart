@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../models/transaction_item.dart';
 
+/// Responsibility: own the expense collection and publish state changes.
+/// Public contract: [expenses], [getTotalAmount], [addNewExpense], and
+/// [deleteExpense].
+/// Boundary: does not build widgets or expose a mutable collection to callers.
 class ExpenseData extends ChangeNotifier {
-  List<TransactionItem> overallExpenseList = [
+  final List<TransactionItem> _expenses = [
     TransactionItem(
       name: "Pet Care",
       amount: "178",
@@ -21,9 +25,11 @@ class ExpenseData extends ChangeNotifier {
     ),
   ];
 
+  List<TransactionItem> get expenses => List.unmodifiable(_expenses);
+
   double getTotalAmount() {
     double total = 0;
-    for (var item in overallExpenseList) {
+    for (var item in _expenses) {
       total += double.tryParse(item.amount) ?? 0;
     }
     return total;
@@ -38,18 +44,18 @@ class ExpenseData extends ChangeNotifier {
       Colors.amber,
     ];
 
-    overallExpenseList.add(
+    _expenses.add(
       TransactionItem(
         name: newName,
         amount: newAmount,
-        color: colors[overallExpenseList.length % colors.length],
+        color: colors[_expenses.length % colors.length],
       ),
     );
     notifyListeners();
   }
 
   void deleteExpense(TransactionItem item) {
-    overallExpenseList.remove(item);
+    _expenses.remove(item);
     notifyListeners();
   }
 }

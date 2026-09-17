@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../models/transaction_item.dart';
-import '../state/expense_data.dart';
+import '../utils/currency_formatter.dart';
 
+/// Responsibility: render expenses and handle dismiss gestures.
+/// Public contract: accepts [expenses] and calls [onDelete] for a dismissed
+/// item.
+/// Boundary: does not own expense state or decide how deletion is persisted.
 class TransactionList extends StatelessWidget {
-  const TransactionList({super.key});
+  const TransactionList({
+    required this.expenses,
+    required this.onDelete,
+    super.key,
+  });
+
+  final List<TransactionItem> expenses;
+  final ValueChanged<TransactionItem> onDelete;
 
   @override
   Widget build(BuildContext context) {
-    final expenseData = Provider.of<ExpenseData>(context);
-
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: expenseData.overallExpenseList.length,
+      itemCount: expenses.length,
       itemBuilder: (context, index) {
-        TransactionItem item = expenseData.overallExpenseList[index];
+        final item = expenses[index];
 
         return Dismissible(
           key: UniqueKey(),
@@ -32,10 +40,7 @@ class TransactionList extends StatelessWidget {
             child: const Icon(Icons.delete, color: Colors.white),
           ),
           onDismissed: (direction) {
-            Provider.of<ExpenseData>(
-              context,
-              listen: false,
-            ).deleteExpense(item);
+            onDelete(item);
           },
           child: Container(
             margin: const EdgeInsets.only(bottom: 15, left: 20, right: 20),
@@ -55,7 +60,7 @@ class TransactionList extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "Rs ${item.amount}/-",
+                  formatRupees(item.amount, suffix: '/-'),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 17,

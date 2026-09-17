@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../state/expense_data.dart';
-
+/// Responsibility: collect and validate the fields for one new expense.
+/// Public contract: invokes [onSave] with the entered name and amount.
+/// Boundary: does not own expense state, choose colors, or persist data.
 class AddTransactionPage extends StatefulWidget {
-  const AddTransactionPage({super.key});
+  const AddTransactionPage({required this.onSave, super.key});
+
+  final void Function(String name, String amount) onSave;
 
   @override
   State<AddTransactionPage> createState() => _AddTransactionPageState();
@@ -77,10 +79,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                 onPressed: () {
                   if (nameController.text.isNotEmpty &&
                       amountController.text.isNotEmpty) {
-                    Provider.of<ExpenseData>(
-                      context,
-                      listen: false,
-                    ).addNewExpense(nameController.text, amountController.text);
+                    widget.onSave(nameController.text, amountController.text);
 
                     Navigator.pop(context);
                   }

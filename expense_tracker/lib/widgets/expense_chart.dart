@@ -1,16 +1,24 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../state/expense_data.dart';
+import '../models/transaction_item.dart';
+import '../utils/currency_formatter.dart';
 
+/// Responsibility: render the expense distribution pie chart and total.
+/// Public contract: accepts only the [expenses] to plot and [totalAmount].
+/// Boundary: does not read or mutate application state or handle navigation.
 class ExpenseChart extends StatelessWidget {
-  const ExpenseChart({super.key});
+  const ExpenseChart({
+    required this.expenses,
+    required this.totalAmount,
+    super.key,
+  });
+
+  final List<TransactionItem> expenses;
+  final double totalAmount;
 
   @override
   Widget build(BuildContext context) {
-    final expenseData = Provider.of<ExpenseData>(context);
-
     return SizedBox(
       height: 200,
       child: Stack(
@@ -21,7 +29,7 @@ class ExpenseChart extends StatelessWidget {
               sectionsSpace: 4,
               centerSpaceRadius: 70,
               startDegreeOffset: 270,
-              sections: expenseData.overallExpenseList
+              sections: expenses
                   .map(
                     (item) => PieChartSectionData(
                       color: item.color,
@@ -41,7 +49,7 @@ class ExpenseChart extends StatelessWidget {
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
               Text(
-                "Rs ${expenseData.getTotalAmount().toStringAsFixed(0)}",
+                formatRupees(totalAmount),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 22,

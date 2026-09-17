@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../state/expense_data.dart';
+import '../utils/currency_formatter.dart';
 import '../widgets/expense_chart.dart';
 import '../widgets/transaction_list.dart';
 import 'add_transaction_page.dart';
 
+/// Responsibility: compose the home screen from state and presentation
+/// modules.
+/// Public contract: provides the [HomePage] route widget.
+/// Boundary: does not render chart/list internals or mutate state directly.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -30,7 +35,10 @@ class HomePage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 25),
-              const ExpenseChart(),
+              ExpenseChart(
+                expenses: value.expenses,
+                totalAmount: value.getTotalAmount(),
+              ),
               const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -46,7 +54,7 @@ class HomePage extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      'Total: Rs ${value.getTotalAmount().toStringAsFixed(0)}',
+                      'Total: ${formatRupees(value.getTotalAmount())}',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
@@ -62,7 +70,10 @@ class HomePage extends StatelessWidget {
                 child: Divider(height: 1),
               ),
               const SizedBox(height: 20),
-              const TransactionList(),
+              TransactionList(
+                expenses: value.expenses,
+                onDelete: value.deleteExpense,
+              ),
             ],
           ),
         ),
@@ -71,7 +82,8 @@ class HomePage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const AddTransactionPage(),
+                builder: (context) =>
+                    AddTransactionPage(onSave: value.addNewExpense),
               ),
             );
           },
