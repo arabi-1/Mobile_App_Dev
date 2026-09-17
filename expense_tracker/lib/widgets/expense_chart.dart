@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../models/transaction_item.dart';
 import '../utils/currency_formatter.dart';
 
-/// Displays the expense distribution and the current total amount.
+/// Displays [expenses] as chart sections and [totalAmount] in the center.
+/// It does not calculate totals, mutate expenses, or access application state.
 class ExpenseChart extends StatelessWidget {
   const ExpenseChart({
     required this.expenses,
@@ -41,7 +42,7 @@ class ExpenseChart extends StatelessWidget {
             .map(
               (expense) => PieChartSectionData(
                 color: expense.color,
-                value: double.tryParse(expense.amount) ?? 0,
+                value: expense.numericAmount,
                 showTitle: false,
                 radius: _sectionRadius,
               ),

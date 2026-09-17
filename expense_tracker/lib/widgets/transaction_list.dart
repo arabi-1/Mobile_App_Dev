@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/transaction_item.dart';
 import '../utils/currency_formatter.dart';
 
-/// Displays expenses and reports dismissed expenses through [onDelete].
+/// Displays [expenses] and reports dismissed expenses through [onDelete].
+/// It does not own the list or decide how deletion is persisted.
 class TransactionList extends StatelessWidget {
   const TransactionList({
     required this.expenses,

@@ -8,6 +8,8 @@ import '../widgets/transaction_list.dart';
 import 'add_transaction_page.dart';
 
 /// Composes the expense chart, summary, list, and add-expense navigation.
+/// Reads [ExpenseData] from the Provider scope and passes explicit data and
+/// callbacks to child widgets; it does not own expense mutation logic.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 

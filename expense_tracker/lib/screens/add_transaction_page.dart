@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Collects a name and amount, then submits them through [onSave].
+import '../utils/currency_formatter.dart';
+
+/// Collects non-empty name and amount fields, then submits them through
+/// [onSave]. It does not validate numeric ranges or persist the expense.
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({required this.onSave, super.key});
 
@@ -65,7 +68,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               controller: amountController,
               hintText: "e.g. 500",
               keyboardType: TextInputType.number,
-              prefixText: "Rs ",
+              prefixText: '$currencySymbol ',
             ),
             const Spacer(),
             SizedBox(

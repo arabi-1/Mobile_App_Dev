@@ -1,8 +1,10 @@
-/// Responsibility: format expense amounts for the app's rupee display.
-/// Public contract: [formatRupees] accepts a number or amount string and an
-/// optional suffix.
-/// Boundary: does not validate input, store state, or render widgets.
+/// The currency symbol used by expense inputs and formatted amounts.
+const currencySymbol = 'Rs';
+
+/// Formats a numeric amount or preserves a supplied amount string for display.
+/// Numeric values are rounded to zero decimal places; strings are not parsed
+/// or validated. [suffix] is appended unchanged.
 String formatRupees(Object amount, {String suffix = ''}) {
   final value = amount is num ? amount.toStringAsFixed(0) : amount.toString();
-  return 'Rs $value$suffix';
+  return '$currencySymbol $value$suffix';
 }
